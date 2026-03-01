@@ -46,7 +46,7 @@ const History = () => {
                         {scans.length > 0 ? scans.map((scan) => (
                             <tr key={scan._id} className="border-b hover:bg-gray-50 transition">
                                 <td className="p-4 text-sm text-gray-500">
-                                    {new Date(scan.createdAt).toLocaleDateString()}
+                                    {new Date(scan.createdAt).toLocaleDateString('en-GB')}
                                 </td>
                                 <td className="p-4 font-medium text-blue-600 truncate max-w-xs">
                                     {scan.website}

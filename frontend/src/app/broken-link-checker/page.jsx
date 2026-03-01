@@ -134,25 +134,37 @@ const downloadBrokenPDF = async () => {
 };
 
   // ✅ FIX 2: handleSubmit ko sahi se define kiya (Duplicate hataya)
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setResult(null);
-    try {
-      setLoading(true);
-      const token = localStorage.getItem("token");
-      const res = await axios.post(
-        "http://localhost:5000/api/broken",
-        { website },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setResult(res.data); 
-    } catch (error) {
-      console.error(error);
-      alert("Scan failed. Please try again.");
-    } finally {
-      setLoading(false);
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setResult(null); // Purana result hamesha clear karein
+  setSitemapMissing(false); // Warning reset karein
+  setLoading(true);
+
+  try {
+    const token = localStorage.getItem("token");
+    const res = await axios.post(
+      "http://localhost:5000/api/broken",
+      { website },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    // 🛑 Condition: Agar sitemap nahi hai
+    if (res.data.sitemapExists === false) {
+      setSitemapMissing(true); // Warning box dikhayega
+      setResult(null); // Result section ko hamesha chhupa kar rakhega
+    } else {
+      // ✅ Agar sitemap hai, tabhi result show hoga
+      setResult(res.data);
+      setSitemapMissing(false);
     }
-  };
+
+  } catch (error) {
+    alert("Scan failed. URL sahi se check karein.");
+  } finally {
+    setLoading(false);
+  }
+};
+  const [sitemapMissing, setSitemapMissing] = useState(false); 
   return (
     <main className="m-8">
       <section className="mt-4 p-4 bg-gray-100 rounded-2xl">
@@ -211,7 +223,25 @@ const downloadBrokenPDF = async () => {
     <p className="text-sm italic text-gray-600">This may take a minute depending on the number of links.</p>
   </div>
 )}
-
+{/* Sitemap Missing Message - Sirf tab dikhega jab sitemap nahi hoga aur loading khatam hogi */}
+{sitemapMissing && !loading && (
+  <div className="mt-6 p-6 bg-red-50 border-2 border-red-200 rounded-2xl shadow-sm">
+    <div className="flex items-start gap-4">
+      <div className="bg-red-500 p-2 rounded-full">
+        <i className="fa-solid fa-circle-xmark text-white text-xl"></i>
+      </div>
+      <div>
+        <h3 className="text-xl font-bold text-red-700 font-['Nunito']">Analysis Blocked!</h3>
+        <p className="text-gray-700 mt-1 font-['PT Sans']">
+          This Website (<span className="font-bold underline">{website}</span>) not having  <span className="font-bold">sitemap.xml</span> file.
+        </p>
+        <p className="text-sm text-gray-600 mt-2 bg-white p-2 rounded border italic">
+          Please ensure your website has a valid sitemap.xml file at the root directory (e.g., https://example.com/sitemap.xml) and try again.
+        </p>
+      </div>
+    </div>
+  </div>
+)}
 {/*  RESULTS SECTION:  */}
 {result && (
   <section className="mt-6 p-6 bg-white border-2 border-red-500 rounded-2xl shadow-lg">

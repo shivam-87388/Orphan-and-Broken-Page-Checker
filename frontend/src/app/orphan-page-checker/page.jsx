@@ -5,7 +5,6 @@ import { Link as LinkIcon } from 'lucide-react'
 import axios from 'axios'
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
@@ -30,8 +29,9 @@ useEffect(() => {
 
 const handleSubmit = async (e) => {
   e.preventDefault();
-  setResult(null); // 🟢 Sabse pehle purana data saaf karein
+  setResult(null); 
   setLoading(true);
+  setSitemapMissing(false); // 🟢 Sabse pehle purani warning chhupayein
 
   try {
     const token = localStorage.getItem("token");
@@ -41,12 +41,21 @@ const handleSubmit = async (e) => {
       { headers: { Authorization: `Bearer ${token}` } }
     );
 
-    // 🔍 Check karein terminal data match ho raha hai
-    console.log("Naya Data Aaya:", res.data); 
-    setResult(res.data); // 🟢 Naya 138 wala data yahan set hoga
+    console.log("Backend Se Data Aaya:", res.data);
 
+    // 🛑 Check: Agar sitemapExists backend se FALSE aaya hai
+    if (res.data.sitemapExists === false) {
+      setSitemapMissing(true); // Red warning box dikhayein
+      setResult(null); // Result hide rakhein
+    } else {
+      // ✅ Agar sitemap mila hai (Flag is True)
+      setResult(res.data); // Result dikhayein
+      setSitemapMissing(false); // Warning band karein
+    }
   } catch (error) {
-    console.error(error);
+    console.error("Request failed:", error);
+    // 500 Error aane par bhi block dikha sakte hain
+    setSitemapMissing(true); 
   } finally {
     setLoading(false);
   }
@@ -263,6 +272,8 @@ autoTable(doc, {
 
   doc.save(`LinkSentinel_Report_${today.replace(/\//g, '-')}.pdf`);
 };
+
+const [sitemapMissing, setSitemapMissing] = useState(false); 
   return (
     <main className="m-8">
       <section className="mt-4 p-4 bg-gray-100 rounded-2xl">
@@ -318,6 +329,26 @@ autoTable(doc, {
   <div className="mt-4 p-4 bg-blue-50 border-l-4 border-blue-500 text-blue-700 animate-pulse">
     <p className="font-bold font-['PT Sans'] text-xl">Processing Analysis...</p>
     <p className="text-sm italic text-gray-600">The tool is scanning your sitemap and crawling internal links. Please wait.</p>
+  </div>
+)}
+{/* Sitemap Missing Message */}
+{/* Sitemap Missing Message */}
+{sitemapMissing && !loading && (
+  <div className="mt-6 p-6 bg-red-50 border-2 border-red-200 rounded-2xl shadow-sm">
+    <div className="flex items-start gap-4">
+      <div className="bg-red-500 p-2 rounded-full text-white">
+        <i className="fa-solid fa-file-circle-xmark text-xl"></i>
+      </div>
+      <div>
+        <h3 className="text-xl font-bold text-red-700 font-['Nunito']">Analysis Blocked!</h3>
+        <p className="text-gray-700 mt-1 font-['PT Sans']">
+          This Website (<span className="font-bold underline">{website}</span>) not having <span className="font-bold">sitemap.xml</span> file. 
+        </p>
+        <p className="text-sm text-gray-600 mt-2 bg-white p-2 rounded border italic font-['PT Sans']">
+          Please ensure your website has a valid sitemap.xml file at the root directory (e.g., https://example.com/sitemap.xml) and try again.
+        </p>
+      </div>
+    </div>
   </div>
 )}
 
