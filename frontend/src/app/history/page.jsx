@@ -12,7 +12,7 @@ const History = () => {
         const fetchHistory = async () => {
             try {
                 const token = localStorage.getItem("token"); // Auth token check
-                const res = await axios.get("http://localhost:5000/api/users/history", {
+                const res = await axios.get("https://orphan-and-broken-page-checker.onrender.com/api/users/history", {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setScans(res.data);

@@ -36,7 +36,7 @@ const handleSubmit = async (e) => {
   try {
     const token = localStorage.getItem("token");
     const res = await axios.post(
-      "http://localhost:5000/api/orphan",
+      "https://orphan-and-broken-page-checker.onrender.com/api/orphan",
       { website },
       { headers: { Authorization: `Bearer ${token}` } }
     );

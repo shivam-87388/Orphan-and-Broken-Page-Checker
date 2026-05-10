@@ -143,17 +143,17 @@ const downloadBrokenPDF = async () => {
   try {
     const token = localStorage.getItem("token");
     const res = await axios.post(
-      "http://localhost:5000/api/broken",
+      "https://orphan-and-broken-page-checker.onrender.com/api/broken",
       { website },
       { headers: { Authorization: `Bearer ${token}` } }
     );
 
-    // 🛑 Condition: Agar sitemap nahi hai
+    //  Condition: Agar sitemap nahi hai
     if (res.data.sitemapExists === false) {
       setSitemapMissing(true); // Warning box dikhayega
       setResult(null); // Result section ko hamesha chhupa kar rakhega
     } else {
-      // ✅ Agar sitemap hai, tabhi result show hoga
+      //  Agar sitemap hai, tabhi result show hoga
       setResult(res.data);
       setSitemapMissing(false);
     }
