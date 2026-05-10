@@ -159,7 +159,7 @@ const downloadBrokenPDF = async () => {
     }
 
   } catch (error) {
-    alert("Scan failed. URL sahi se check karein.");
+    alert("Scan failed. check URL");
   } finally {
     setLoading(false);
   }
