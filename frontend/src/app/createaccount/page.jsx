@@ -31,7 +31,8 @@ const CreateAccount = () => {
     }),
     onSubmit: (values) => {
       // Send form data to backend
-      axios.post('https://orphan-and-broken-page-checker.onrender.com/api/users/register', {
+      axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/users/register`, {
   firstName: values.firstName,
   lastName: values.lastName,
   email: values.email,

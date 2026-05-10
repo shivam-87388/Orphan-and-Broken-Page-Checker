@@ -143,7 +143,7 @@ const downloadBrokenPDF = async () => {
   try {
     const token = localStorage.getItem("token");
     const res = await axios.post(
-      "https://orphan-and-broken-page-checker.onrender.com/api/broken",
+      `${process.env.NEXT_PUBLIC_API_URL}/api/broken`,
       { website },
       { headers: { Authorization: `Bearer ${token}` } }
     );
