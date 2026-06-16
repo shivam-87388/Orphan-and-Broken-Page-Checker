@@ -25,7 +25,7 @@ const Page = () => {
     }
   }, [router])
 
-  // ✅ FIX 1: downloadBrokenPDF ko handleSubmit se BAHAR nikaal diya
+  //  FIX 1: downloadBrokenPDF ko handleSubmit se BAHAR nikaal diya
 const downloadBrokenPDF = async () => {
   if (!result) return;
   const doc = new jsPDF('p', 'mm', 'a4');
@@ -187,29 +187,30 @@ const downloadBrokenPDF = async () => {
     Enter your website URL
   </label>
 
-  <div className="flex items-center gap-3 mt-2">
-    {/* Input */}
-    <div className="flex items-center border-2 gap-2.5 p-2.5 border-gray-500 rounded-md w-[340px]">
-      <LinkIcon size={20} absoluteStrokeWidth />
-      <input
-        className="text-black outline-none flex-1"
-        type="url"
-        id="website-url"
-        placeholder="https://example.com"
-        value={website} 
-       onChange={(e) => setWebsite(e.target.value)}
-        required
-      />
-    </div>
-    {/* Button */}
-    <button
-      type="submit"
-      className="finline-flex items-center justify-center px-3 py-2 mr-3 text-xl font-['Nunito'] font-medium text-center text-white rounded-lg bg-red-600 ring-2 ring-red-600 ring-offset-2 cursor-pointer transition-transform transform hover:scale-95"
-    >
-      <i className="fa-brands fa-searchengin fa-lg"></i>
-      <span>Analysis</span>
-    </button>
+  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-2 w-full max-w-2xl">
+  {/* Input Box Wrapper */}
+  <div className="flex items-center border-2 gap-2.5 p-2.5 border-gray-500 rounded-md w-full sm:w-[340px] md:w-[400px]">
+    <LinkIcon size={20} absoluteStrokeWidth className="text-gray-500 shrink-0" />
+    <input
+      className="text-black outline-none flex-1 bg-transparent w-full min-w-0"
+      type="url"
+      id="website-url"
+      placeholder="https://example.com"
+      value={website} 
+      onChange={(e) => setWebsite(e.target.value)}
+      required
+    />
   </div>
+  
+  {/* Analysis Button */}
+  <button
+    type="submit"
+    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-xl font-['Nunito'] font-medium text-center text-white rounded-lg bg-red-600 ring-2 ring-red-600 ring-offset-2 cursor-pointer transition-transform transform hover:scale-95 active:scale-100 whitespace-nowrap"
+  >
+    <i className="fa-brands fa-searchengin fa-lg"></i>
+    <span>Analysis</span>
+  </button>
+</div>
   {/* note text  */}
   <p className="mt-2 text-red-600 text-sm">
     *Make sure your Website Url is valid.

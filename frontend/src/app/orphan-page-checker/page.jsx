@@ -31,7 +31,7 @@ const handleSubmit = async (e) => {
   e.preventDefault();
   setResult(null); 
   setLoading(true);
-  setSitemapMissing(false); // 🟢 Sabse pehle purani warning chhupayein
+  setSitemapMissing(false);
 
   try {
     const token = localStorage.getItem("token");
@@ -43,12 +43,12 @@ const handleSubmit = async (e) => {
 
     console.log("Backend Se Data Aaya:", res.data);
 
-    // 🛑 Check: Agar sitemapExists backend se FALSE aaya hai
+    //  Check: Agar sitemapExists backend se FALSE aaye
     if (res.data.sitemapExists === false) {
       setSitemapMissing(true); // Red warning box dikhayein
       setResult(null); // Result hide rakhein
     } else {
-      // ✅ Agar sitemap mila hai (Flag is True)
+      //  Agar sitemap mila hai 
       setResult(res.data); // Result dikhayein
       setSitemapMissing(false); // Warning band karein
     }
@@ -296,29 +296,30 @@ const [sitemapMissing, setSitemapMissing] = useState(false);
     Enter your website URL
   </label>
 
-  <div className="flex items-center gap-3 mt-2">
-    {/* Input */}
-    <div className="flex items-center border-2 gap-2.5 p-2.5 border-gray-500 rounded-md w-[340px]">
-      <LinkIcon size={20} absoluteStrokeWidth />
-      <input
-        className="text-black outline-none flex-1"
-        type="url"
-        id="website-url"
-        placeholder="https://example.com"
-        value={website}                     
-        onChange={(e) => setWebsite(e.target.value)}
-        required
-      />
-    </div>
-    {/* Button */}
-    <button
-      type="submit"
-      className="finline-flex items-center justify-center px-3 py-2 mr-3 text-xl font-['Lora'] font-medium text-center text-white rounded-lg bg-red-600 ring-2 ring-red-600 ring-offset-2 cursor-pointer transition-transform transform hover:scale-95"
-    >
-      <i className="fa-brands fa-searchengin fa-lg"></i>
-      <span>Analysis</span>
-    </button>
+ <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mt-3 w-full max-w-2xl">
+  {/* Input Field Container */}
+  <div className="flex items-center border-2 gap-2.5 p-2.5 border-gray-500 rounded-md w-full sm:w-[360px] md:w-[420px] bg-white transition-colors focus-within:border-red-500">
+    <LinkIcon size={20} absoluteStrokeWidth className="text-gray-500 shrink-0" />
+    <input
+      className="text-black outline-none flex-1 bg-transparent w-full min-w-0"
+      type="url"
+      id="website-url"
+      placeholder="https://example.com"
+      value={website}                     
+      onChange={(e) => setWebsite(e.target.value)}
+      required
+    />
   </div>
+
+  {/* Analysis Button */}
+  <button
+    type="submit"
+    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-xl font-['Lora'] font-medium text-center text-white rounded-lg bg-red-600 ring-2 ring-red-600 ring-offset-2 cursor-pointer transition-transform transform hover:scale-95 active:scale-100 whitespace-nowrap shadow-sm"
+  >
+    <i className="fa-brands fa-searchengin fa-lg"></i>
+    <span>Analysis</span>
+  </button>
+</div> 
   {/* note text  */}
   <p className="mt-2 text-red-600 text-sm">
     *Make sure your Website Url is valid.
