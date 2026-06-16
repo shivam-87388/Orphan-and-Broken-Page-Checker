@@ -17,7 +17,7 @@ const History = () => {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setScans(res.data);
-                setLoading(false);
+                setLoading(false)
             } catch (err) {
                 console.error("History fetch error:", err);
                 setLoading(false);
